@@ -75,7 +75,11 @@ var PostITator = {
         if ( PostITator.options.onDelete ) {
             PostITator.options.onDelete($(this).parent('.note').attr('id'));
         }
-        $(this).parent('.note').hide("puff", { percent: 133 }, 250);
+        // $(this).parent('.note').hide("puff", { percent: 133 }, 250);
+        // $(this).parent('.note').hide("puff", { percent: 133 }, 250).remove();
+        $(this).parent('.note').remove();
+        PostITator.lastTop = 0;
+        PostITator.lastLeft = 0;
     },
 
     // https://stackoverflow.com/a/2117523/1994792
@@ -87,18 +91,38 @@ var PostITator = {
     },
 
     newNote: function (event) {
-        PostITator.addNote();
+        var id = false;
+        var top = $(document).scrollTop() + 20;
+        var left = 20;
+        PostITator.addNote(id, top, left);
         return false;
     },
 
+    lastTop: 0,
+    lastLeft: 0,
     addNote: function (id=false, top=false, left=false, text=false) {
-        if ( ! top ) top = $(document).scrollTop();
+        console.log('begin', top, left, PostITator.lastTop.lastTop, PostITator.lastTop.lastleft);
+        var current = false;
+        $('.current').each(function(i, obj) {
+            if ( ! current ) current = obj;
+        });
+
+        if ( current && PostITator.lastTop == top && PostITator.lastLeft == left ) {
+            top = current.offsetTop + 20;
+            left = current.offsetLeft + 20;
+        } else {
+            PostITator.lastTop = top;
+            PostITator.lastLeft = left;
+        }
+        console.log('end', top, left);
+
+        $('.current').removeClass('current');
+
         if ( ! id ) id = PostITator.uuidv4();
-        if ( ! left ) left = 50;
         if ( ! text ) text = '';
-        console.log('newNote', id, top, left, text);
+        // console.log('newNote', id, top, left, text);
         $(PostITator.noteTemp).attr('id', id).css('top', top).css('left', left).css('position', 'absolute')
-        .hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+        .addClass('current').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
             function () {
                 $(this).zIndex(++PostITator.noteZindex);
             }).on('dragstop', function() {
@@ -139,8 +163,8 @@ var PostITator = {
     });
     var currentpos = 0;
     if ( current ) {
-        currentpos = (current.offsetTop * 5000 ) * current.offsetLeft;
-        currentpos = current.offsetTop;
+        currentpos = (current.offsetTop * 5000 ) + current.offsetLeft;
+        // currentpos = current.offsetTop;
     }
     var first = false;
     var firstpos = false;
@@ -151,9 +175,9 @@ var PostITator = {
     var next = false;
     var nextpos = false;
     $('.note').each(function(i, obj) {
-        var pos = (obj.offsetTop * 5000 ) * obj.offsetLeft;
-        pos = obj.offsetTop ;
-        console.log(pos, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
+        var pos = (obj.offsetTop * 5000 ) + obj.offsetLeft;
+        // pos = obj.offsetTop ;
+        // console.log(pos, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
         if ( ! lastpos || pos > lastpos ) {
             last = obj;
             lastpos = pos;
@@ -171,7 +195,7 @@ var PostITator = {
             nextpos = pos;
         }
     });
-    console.log(forward, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
+    // console.log(forward, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
 
     if ( ! next ) next = first;
     if ( ! prev ) prev = last;
@@ -193,12 +217,8 @@ var PostITator = {
             $.ajax({
                 type: 'DELETE',
                 url: PostITator.options.service + '/' + id,
-            }).done(function (data) {
-                console.log('SUCCESS');
             }).fail(function (msg) {
-                console.log('FAIL');
-            }).always(function (msg) {
-                console.log('ALWAYS');
+                console.log('onDelete FAIL '+msg.status);
             });
         }
     },
@@ -213,12 +233,8 @@ var PostITator = {
                 url: PostITator.options.service,
                 contentType: 'application/json',
                 data: JSON.stringify(data), // access in body
-            }).done(function () {
-                console.log('SUCCESS');
             }).fail(function (msg) {
-                console.log('FAIL');
-            }).always(function (msg) {
-                console.log('ALWAYS');
+                console.log('onChange FAIL'+msg.status);
             });
         }
     },
@@ -230,16 +246,13 @@ var PostITator = {
                 type: 'GET',
                 url: PostITator.options.service,
             }).done(function (data) {
-                console.log('SUCCESS');
-                // console.log(data);
+                console.log('loadNotes SUCCESS');
                 for(var i=0; i< data.length; i++) {
                     var note = data[i];
                     PostITator.addNote(note.id, note.top, note.left, note.text);
                 }
             }).fail(function (msg) {
-                console.log('FAIL');
-            }).always(function (msg) {
-                console.log('ALWAYS');
+                console.log('loadNotes FAIL '+msg.status);
             });
         }
     },
