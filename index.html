@@ -119,6 +119,11 @@ $(document).ready(function () {
   $('.remove').click(PostITator.deleteNote);
   PostITator.newNote();
 
+  // onDelete : function(id, top, left, text)
+  PostITator.options.onDelete = PostITator.onDelete;
+  // onChange : function(id, top, left, text)
+  PostITator.options.onChange = PostITator.onChange;
+  
   return false;
 });
 //# sourceURL=pen.js

@@ -72,6 +72,9 @@ var PostITator = {
 
     noteZindex : 1,
     deleteNote : function () {
+        if ( PostITator.options.onDelete ) {
+            PostITator.options.onDelete($(this).parent('.note').attr('id'));
+        }
         $(this).parent('.note').hide("puff", { percent: 133 }, 250);
     },
 
@@ -86,10 +89,18 @@ var PostITator = {
     newNote: function () {
     var top = $(document).scrollTop();
     console.log('top', top);
-    $(PostITator.noteTemp).css('top', top).css('right', '50').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+    $(PostITator.noteTemp).attr('id', PostITator.uuidv4()).css('top', top).css('right', '50').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function () {
-            this.id = PostITator.uuidv4();
             $(this).zIndex(++PostITator.noteZindex);
+        }).on('dragstop', function() {
+            console.log('this', this);
+            var id = this.id;
+            var top = this.offsetTop;
+            var left = this.offsetLeft;
+            var text = $(this).find('textarea')[0].value;
+            if ( PostITator.options.onChange ) {
+                PostITator.options.onChange(id, top, left, text);
+            }
         });
 
     $('.remove').click(PostITator.deleteNote);
@@ -157,7 +168,15 @@ var PostITator = {
         $(prev).addClass('current');
     }
     if ( current ) $(current).removeClass('current');
-    }
+    },
+
+    onDelete : function(id) {
+        console.log('onDelete', id);
+    },
+
+    onChange : function(id, top, left, text) {
+        console.log('onChange', id, top, left, text);
+    },
 };
 
 
