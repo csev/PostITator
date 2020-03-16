@@ -64,7 +64,7 @@
 var PostITator = {
     options : {} ,
     noteTemp : '<div class="note">' +
-'<a href="javascript:;" class="button remove">X</a>' +
+'<a href="javascript:;" class="button PostITator-remove">X</a>' +
 '<div class="note_cnt">' +
 '<textarea class="cnt" placeholder="Enter note"></textarea>' +
 '</div> ' +
@@ -86,28 +86,40 @@ var PostITator = {
         });
     },
 
-    newNote: function () {
-    var top = $(document).scrollTop();
-    console.log('top', top);
-    $(PostITator.noteTemp).attr('id', PostITator.uuidv4()).css('top', top).css('right', '50').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
-        function () {
-            $(this).zIndex(++PostITator.noteZindex);
-        }).on('dragstop', function() {
-            console.log('this', this);
-            var id = this.id;
-            var top = this.offsetTop;
-            var left = this.offsetLeft;
-            var text = $(this).find('textarea')[0].value;
+    newNote: function (id=false, top=false, left=false, text=false) {
+        if ( ! top ) top = $(document).scrollTop();
+        if ( ! id ) id = PostITator.uuidv4();
+        if ( ! left ) left = 50;
+        if ( ! text ) text = '';
+        console.log('newNote', id, top, left, text);
+        $(PostITator.noteTemp).attr('id', id).css('top', top).css('left', left).css('position', 'absolute')
+        .hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+            function () {
+                $(this).zIndex(++PostITator.noteZindex);
+            }).on('dragstop', function() {
+                console.log('this', this);
+                var id = this.id;
+                var top = this.offsetTop;
+                var left = this.offsetLeft;
+                var text = $(this).find('textarea')[0].value;
+                if ( PostITator.options.onChange ) {
+                    PostITator.options.onChange(id, top, left, text);
+                }
+            }).find('textarea')[0].value = text;
+
+        $('.PostITator-remove').click(PostITator.deleteNote);
+
+        $('#'+id).find('textarea').autogrow().on('change', function() {
+            var elem = document.getElementById(id);
+            var top = elem.offsetTop;
+            var left = elem.offsetLeft;
+            var text = this.value;
             if ( PostITator.options.onChange ) {
                 PostITator.options.onChange(id, top, left, text);
             }
         });
 
-    $('.remove').click(PostITator.deleteNote);
-    $('textarea').autogrow();
-
-    $('.note');
-    return false;
+        return false;
     },
 
     nextNote: function () {
@@ -176,6 +188,44 @@ var PostITator = {
 
     onChange : function(id, top, left, text) {
         console.log('onChange', id, top, left, text);
+        if ( PostITator.options.service ) {
+            let data = {"id":id, "top":top, "left":left, "text": text}
+
+            $.ajax({
+                type: 'POST',
+                url: PostITator.options.service,
+                contentType: 'application/json',
+                data: JSON.stringify(data), // access in body
+            }).done(function () {
+                console.log('SUCCESS');
+            }).fail(function (msg) {
+                console.log('FAIL');
+            }).always(function (msg) {
+                console.log('ALWAYS');
+            });
+        }
+    },
+
+    loadNotes : function() {
+        console.log('loadNotes');
+        if ( PostITator.options.service ) {
+            $.ajax({
+                type: 'GET',
+                url: PostITator.options.service,
+            }).done(function (data) {
+                console.log('SUCCESS');
+                // console.log(data);
+                for(var i=0; i< data.length; i++) {
+                    var note = data[i];
+                    console.log('note', note);
+                    PostITator.newNote(note.id, note.top, note.left, note.text);
+                }
+            }).fail(function (msg) {
+                console.log('FAIL');
+            }).always(function (msg) {
+                console.log('ALWAYS');
+            });
+        }
     },
 };
 
