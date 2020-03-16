@@ -101,7 +101,7 @@ var PostITator = {
     lastTop: 0,
     lastLeft: 0,
     addNote: function (id=false, top=false, left=false, text=false) {
-        console.log('begin', top, left, PostITator.lastTop.lastTop, PostITator.lastTop.lastleft);
+        // console.log('begin', top, left, PostITator.lastTop.lastTop, PostITator.lastTop.lastleft);
         var current = false;
         $('.current').each(function(i, obj) {
             if ( ! current ) current = obj;
@@ -114,7 +114,7 @@ var PostITator = {
             PostITator.lastTop = top;
             PostITator.lastLeft = left;
         }
-        console.log('end', top, left);
+        // console.log('end', top, left);
 
         $('.current').removeClass('current');
 
@@ -152,63 +152,65 @@ var PostITator = {
     nextNote: function () {
         PostITator.moveNote(true);
     },
+
     prevNote: function () {
         PostITator.moveNote(false);
     },
+
     moveNote : function (forward) {
-    var sct = $(document).scrollTop();
-    var current = false;
-    $('.current').each(function(i, obj) {
-        if ( ! current ) current = obj;
-    });
-    var currentpos = 0;
-    if ( current ) {
-        currentpos = (current.offsetTop * 5000 ) + current.offsetLeft;
-        // currentpos = current.offsetTop;
-    }
-    var first = false;
-    var firstpos = false;
-    var last = false;
-    var lastpos = false;
-    var prev = false;
-    var prevpos = false;
-    var next = false;
-    var nextpos = false;
-    $('.note').each(function(i, obj) {
-        var pos = (obj.offsetTop * 5000 ) + obj.offsetLeft;
-        // pos = obj.offsetTop ;
-        // console.log(pos, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
-        if ( ! lastpos || pos > lastpos ) {
-            last = obj;
-            lastpos = pos;
+        var sct = $(document).scrollTop();
+        var current = false;
+        $('.current').each(function(i, obj) {
+            if ( ! current ) current = obj;
+        });
+        var currentpos = 0;
+        if ( current ) {
+            currentpos = (current.offsetTop * 5000 ) + current.offsetLeft;
+            // currentpos = current.offsetTop;
         }
-        if ( ! firstpos || pos < firstpos ) {
-            first = obj;
-            firstpos = pos;
-        }
-        if ( pos < currentpos && (pos > prevpos || !prevpos) ) {
-            prev = obj
-            prevpos = pos;
-        }
-        if ( pos > currentpos && (pos < nextpos || !nextpos) ) {
-            next = obj
-            nextpos = pos;
-        }
-    });
-    // console.log(forward, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
+        var first = false;
+        var firstpos = false;
+        var last = false;
+        var lastpos = false;
+        var prev = false;
+        var prevpos = false;
+        var next = false;
+        var nextpos = false;
+        $('.note').each(function(i, obj) {
+            var pos = (obj.offsetTop * 5000 ) + obj.offsetLeft;
+            // pos = obj.offsetTop ;
+            // console.log(pos, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
+            if ( ! lastpos || pos > lastpos ) {
+                last = obj;
+                lastpos = pos;
+            }
+            if ( ! firstpos || pos < firstpos ) {
+                first = obj;
+                firstpos = pos;
+            }
+            if ( pos < currentpos && (pos > prevpos || !prevpos) ) {
+                prev = obj
+                prevpos = pos;
+            }
+            if ( pos > currentpos && (pos < nextpos || !nextpos) ) {
+                next = obj
+                nextpos = pos;
+            }
+        });
+        // console.log(forward, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
 
-    if ( ! next ) next = first;
-    if ( ! prev ) prev = last;
+        if ( ! next ) next = first;
+        if ( ! prev ) prev = last;
 
-    if ( forward && next ) {
-        next.scrollIntoView({ behavior: 'smooth' });
-        $(next).addClass('current');
-    }
-    if ( ! forward && prev ) {
-        prev.scrollIntoView({ behavior: 'smooth' });
-        $(prev).addClass('current');
-    }
-    if ( current ) $(current).removeClass('current');
+        if ( forward && next ) {
+            next.scrollIntoView({ behavior: 'smooth' });
+            $(next).addClass('current');
+        }
+        if ( ! forward && prev ) {
+            prev.scrollIntoView({ behavior: 'smooth' });
+            $(prev).addClass('current');
+        }
+        if ( current ) $(current).removeClass('current');
     },
 
     onDelete : function(id) {
