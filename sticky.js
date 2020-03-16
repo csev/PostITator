@@ -73,11 +73,21 @@ function deleteNote() {
     $(this).parent('.note').hide("puff", { percent: 133 }, 250);
 };
 
+
+// https://stackoverflow.com/a/2117523/1994792
+function note_uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 function newNote() {
     var top = $(document).scrollTop();
     console.log('top', top);
     $(noteTemp).css('top', top).css('right', '50').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function () {
+            this.id = note_uuidv4();
             $(this).zIndex(++noteZindex);
         });
 
@@ -90,7 +100,6 @@ function newNote() {
 
 function moveNote(forward) {
     var sct = $(document).scrollTop();
-    console.log('nextNote', sct);
     var current = false;
     $('.current').each(function(i, obj) {
         if ( ! current ) current = obj;
@@ -99,7 +108,6 @@ function moveNote(forward) {
     if ( current ) {
         currentpos = (current.offsetTop * 5000 ) * current.offsetLeft;
     }
-    console.log('currentpos', currentpos);
     var first = false;
     var firstpos = false;
     var last = false;
@@ -128,25 +136,22 @@ function moveNote(forward) {
             next = obj
             nextpos = pos;
         }
-        console.log(currentpos, pos, prevpos, nextpos);
     });
-    console.log('first, prev, current, next, last');
-    console.log(first, prev, current, next, last);
+
     // https://stackoverflow.com/a/56687659/1994792
     if ( ! next ) next = first;
     if ( ! prev ) prev = last;
     if ( forward && next ) {
-        console.log('Forward');
         next.scrollIntoView({ behavior: 'smooth' });
         $(next).addClass('current');
     }
     if ( ! forward && prev ) {
-        console.log('Backward');
         prev.scrollIntoView({ behavior: 'smooth' });
         $(prev).addClass('current');
     }
     if ( current ) $(current).removeClass('current');
 }
+
 function nextNote() {
     moveNote(true);
 }
