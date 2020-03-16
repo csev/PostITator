@@ -61,44 +61,51 @@
     })(jQuery);
 
 
-var noteTemp = '<div class="note">' +
+var PostITator = {
+    options : {} ,
+    noteTemp : '<div class="note">' +
 '<a href="javascript:;" class="button remove">X</a>' +
 '<div class="note_cnt">' +
 '<textarea class="cnt" placeholder="Enter note"></textarea>' +
 '</div> ' +
-'</div>';
+'</div>',
 
-var noteZindex = 1;
-function deleteNote() {
-    $(this).parent('.note').hide("puff", { percent: 133 }, 250);
-};
+    noteZindex : 1,
+    deleteNote : function () {
+        $(this).parent('.note').hide("puff", { percent: 133 }, 250);
+    },
 
+    // https://stackoverflow.com/a/2117523/1994792
+    uuidv4: function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    },
 
-// https://stackoverflow.com/a/2117523/1994792
-function note_uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
-function newNote() {
+    newNote: function () {
     var top = $(document).scrollTop();
     console.log('top', top);
-    $(noteTemp).css('top', top).css('right', '50').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+    $(PostITator.noteTemp).css('top', top).css('right', '50').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
         function () {
-            this.id = note_uuidv4();
-            $(this).zIndex(++noteZindex);
+            this.id = PostITator.uuidv4();
+            $(this).zIndex(++PostITator.noteZindex);
         });
 
-    $('.remove').click(deleteNote);
+    $('.remove').click(PostITator.deleteNote);
     $('textarea').autogrow();
 
     $('.note');
     return false;
-};
+    },
 
-function moveNote(forward) {
+    nextNote: function () {
+        PostITator.moveNote(true);
+    },
+    prevNote: function () {
+        PostITator.moveNote(false);
+    },
+    moveNote : function (forward) {
     var sct = $(document).scrollTop();
     var current = false;
     $('.current').each(function(i, obj) {
@@ -150,13 +157,7 @@ function moveNote(forward) {
         $(prev).addClass('current');
     }
     if ( current ) $(current).removeClass('current');
-}
-
-function nextNote() {
-    moveNote(true);
-}
-function prevNote() {
-    moveNote(false);
-}
+    }
+};
 
 

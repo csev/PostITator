@@ -112,12 +112,12 @@ $(document).ready(function () {
 
   $("#board").height($(document).height());
 
-  $("#add_new").click(newNote);
-  $("#prev_note").click(prevNote);
-  $("#next_note").click(nextNote);
+  $("#add_new").click(PostITator.newNote);
+  $("#prev_note").click(PostITator.prevNote);
+  $("#next_note").click(PostITator.nextNote);
 
-  $('.remove').click(deleteNote);
-  newNote();
+  $('.remove').click(PostITator.deleteNote);
+  PostITator.newNote();
 
   return false;
 });
