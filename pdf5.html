@@ -56,9 +56,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@2.2.228/b
 function handlePages(page)
 {
     //This gives us the page's dimensions at full scale
-    var viewport = page.getViewport( 1.5 );
+    var viewport = page.getViewport({ scale: 1.5, rotation: 0 });
 
-    /*
     //We'll create a canvas for each page to draw it on
     var canvas = document.createElement( "canvas" );
     canvas.style.display = "block";
@@ -72,29 +71,6 @@ function handlePages(page)
 
     //Add it to the web page
     document.body.appendChild( canvas );
-    */
-
-  // var container = document.getElementById('the-svg');
-    var container = document.createElement( "div" );
-
-  // Set dimensions
-  container.style.width = viewport.width + 'px';
-  container.style.height = viewport.height + 'px';
-    container.setAttribute('class', 'pdf-page');
-
-  // SVG rendering by PDF.js
-  page.getOperatorList()
-    .then(function (opList) {
-      var svgGfx = new pdfjsLib.SVGGraphics(page.commonObjs, page.objs);
-      return svgGfx.getSVG(opList, viewport);
-    })
-    .then(function (svg) {
-      container.appendChild(svg);
-            //Add it to the web page
-    var fred = document.getElementById('fred');
-    document.body.appendChild( container );
-    // document.body.appendChild( fred );
-    });
 
     //Move to next page
     currPage++;
