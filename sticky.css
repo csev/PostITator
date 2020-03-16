@@ -126,6 +126,7 @@ a:focus {
   transition: -webkit-transform .15s;
   transition: transform .15s;
   transition: transform .15s, -webkit-transform .15s;
+  scroll-margin: 40px;
   z-index: 1;
 }
 .note:hover {
