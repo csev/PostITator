@@ -86,7 +86,12 @@ var PostITator = {
         });
     },
 
-    newNote: function (id=false, top=false, left=false, text=false) {
+    newNote: function (event) {
+        PostITator.addNote();
+        return false;
+    },
+
+    addNote: function (id=false, top=false, left=false, text=false) {
         if ( ! top ) top = $(document).scrollTop();
         if ( ! id ) id = PostITator.uuidv4();
         if ( ! left ) left = 50;
@@ -118,8 +123,6 @@ var PostITator = {
                 PostITator.options.onChange(id, top, left, text);
             }
         });
-
-        return false;
     },
 
     nextNote: function () {
@@ -137,6 +140,7 @@ var PostITator = {
     var currentpos = 0;
     if ( current ) {
         currentpos = (current.offsetTop * 5000 ) * current.offsetLeft;
+        currentpos = current.offsetTop;
     }
     var first = false;
     var firstpos = false;
@@ -147,30 +151,31 @@ var PostITator = {
     var next = false;
     var nextpos = false;
     $('.note').each(function(i, obj) {
-        console.log(i,obj);
-        pos = (obj.offsetTop * 5000 ) * obj.offsetLeft;
-        if ( $(obj).hasClass('current') ) return;
+        var pos = (obj.offsetTop * 5000 ) * obj.offsetLeft;
+        pos = obj.offsetTop ;
+        console.log(pos, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
         if ( ! lastpos || pos > lastpos ) {
             last = obj;
             lastpos = pos;
         }
-        if ( ! firstpos || pos > firstpos ) {
+        if ( ! firstpos || pos < firstpos ) {
             first = obj;
             firstpos = pos;
         }
-        if ( (! prevpos && pos < currentpos ) || ( prevpos && pos > prevpos ) ) {
+        if ( pos < currentpos && (pos > prevpos || !prevpos) ) {
             prev = obj
             prevpos = pos;
         }
-        if ( (! nextpos && pos > currentpos ) || ( nextpos && pos < nextpos ) ) {
+        if ( pos > currentpos && (pos < nextpos || !nextpos) ) {
             next = obj
             nextpos = pos;
         }
     });
+    console.log(forward, 'fpcnl', firstpos,prevpos,currentpos,nextpos,lastpos);
 
-    // https://stackoverflow.com/a/56687659/1994792
     if ( ! next ) next = first;
     if ( ! prev ) prev = last;
+
     if ( forward && next ) {
         next.scrollIntoView({ behavior: 'smooth' });
         $(next).addClass('current');
@@ -184,6 +189,18 @@ var PostITator = {
 
     onDelete : function(id) {
         console.log('onDelete', id);
+        if ( PostITator.options.service ) {
+            $.ajax({
+                type: 'DELETE',
+                url: PostITator.options.service + '/' + id,
+            }).done(function (data) {
+                console.log('SUCCESS');
+            }).fail(function (msg) {
+                console.log('FAIL');
+            }).always(function (msg) {
+                console.log('ALWAYS');
+            });
+        }
     },
 
     onChange : function(id, top, left, text) {
@@ -217,8 +234,7 @@ var PostITator = {
                 // console.log(data);
                 for(var i=0; i< data.length; i++) {
                     var note = data[i];
-                    console.log('note', note);
-                    PostITator.newNote(note.id, note.top, note.left, note.text);
+                    PostITator.addNote(note.id, note.top, note.left, note.text);
                 }
             }).fail(function (msg) {
                 console.log('FAIL');

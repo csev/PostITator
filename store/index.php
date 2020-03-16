@@ -26,6 +26,21 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     return;
 }
 
+if ( $_SERVER['REQUEST_METHOD'] === 'DELETE' ) {
+    $annotations = U::get($_SESSION, 'annotations', array());
+
+    if ( isset($pieces->parameters[0]) ) {
+        $id = $pieces->parameters[0];
+        unset($annotations[$id]);
+    } else {
+        $annotations = array();
+    }
+    $_SESSION['annotations'] = $annotations;
+
+    http_response_code(204);
+    return;
+}
+
 /*
 
 // Force the session ID REST style :)
