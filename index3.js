@@ -74,7 +74,9 @@ function deleteNote() {
 };
 
 function newNote() {
-  $(noteTemp).hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+  var top = $(document).scrollTop();
+  console.log('top', top);
+  $(noteTemp).css('top', top).css('right', '50').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
   function () {
     $(this).zIndex(++noteZindex);
   });
