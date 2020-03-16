@@ -122,7 +122,9 @@ var PostITator = {
         if ( ! text ) text = '';
         // console.log('newNote', id, top, left, text);
         $(PostITator.noteTemp).attr('id', id).css('top', top).css('left', left).css('position', 'absolute')
-        .addClass('current').hide().appendTo("#board").show("fade", 300).draggable().on('dragstart',
+        .addClass('current').hide().appendTo("#board").show("fade", 300)
+        .zIndex(++PostITator.noteZindex)
+        .draggable().on('dragstart',
             function () {
                 $(this).zIndex(++PostITator.noteZindex);
             }).on('dragstop', function() {
@@ -240,6 +242,20 @@ var PostITator = {
             });
         }
     },
+
+    deleteAll : function() {
+        console.log('deleteAll');
+        $('.note').remove();
+        if ( PostITator.options.service ) {
+            $.ajax({
+                type: 'DELETE',
+                url: PostITator.options.service,
+            }).fail(function (msg) {
+                console.log('deleteAll FAIL '+msg.status);
+            });
+        }
+    },
+
 
     loadNotes : function() {
         console.log('loadNotes');
