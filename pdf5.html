@@ -43,7 +43,7 @@
 // If absolute URL from the remote server is provided, configure the CORS
 // header on that server.
 // var url = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/examples/learning/helloworld.pdf';
-var url = 'pythonlearn.pdf';
+var url = 'why_sakai.pdf';
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
 var pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -124,71 +124,7 @@ var thePDF = null;
 <script src='index3.js'></script>
 
 <script>
-    function moveNote(forward) {
-        var sct = $(document).scrollTop();
-        console.log('nextNote', sct);
-        var current = false;
-        $('.current').each(function(i, obj) {
-            if ( ! current ) current = obj;
-        });
-        var currentpos = 0;
-        if ( current ) {
-            currentpos = (current.offsetTop * 5000 ) * current.offsetLeft;
-        }
-        console.log('currentpos', currentpos);
-        var first = false;
-        var firstpos = false;
-        var last = false;
-        var lastpos = false;
-        var prev = false;
-        var prevpos = false;
-        var next = false;
-        var nextpos = false;
-        $('.note').each(function(i, obj) {
-            console.log(i,obj);
-            pos = (obj.offsetTop * 5000 ) * obj.offsetLeft;
-            if ( $(obj).hasClass('current') ) return;
-            if ( ! lastpos || pos > lastpos ) {
-                last = obj;
-                lastpos = pos;
-            }
-            if ( ! firstpos || pos > firstpos ) {
-                first = obj;
-                firstpos = pos;
-            }
-            if ( (! prevpos && pos < currentpos ) || ( prevpos && pos > prevpos ) ) {
-                prev = obj
-                prevpos = pos;
-            }
-            if ( (! nextpos && pos > currentpos ) || ( nextpos && pos < nextpos ) ) {
-                next = obj
-                nextpos = pos;
-            }
-            console.log(currentpos, pos, prevpos, nextpos);
-        });
-        console.log('first, prev, current, next, last');
-        console.log(first, prev, current, next, last);
-        // https://stackoverflow.com/a/56687659/1994792
-        if ( ! next ) next = first;
-        if ( ! prev ) prev = last;
-        if ( forward && next ) {
-            console.log('Forward');
-            next.scrollIntoView({ behavior: 'smooth' });
-            $(next).addClass('current');
-        }
-        if ( ! forward && prev ) {
-            console.log('Backward');
-            prev.scrollIntoView({ behavior: 'smooth' });
-            $(prev).addClass('current');
-        }
-        if ( current ) $(current).removeClass('current');
-    }
-    function nextNote() {
-        moveNote(true);
-    }
-    function prevNote() {
-        moveNote(false);
-    }
+
 $(document).ready(function () {
 
   $("#board").height($(document).height());
