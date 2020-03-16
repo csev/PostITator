@@ -29,8 +29,8 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
 if ( $_SERVER['REQUEST_METHOD'] === 'DELETE' ) {
     $annotations = U::get($_SESSION, 'annotations', array());
 
-    if ( isset($pieces->parameters[0]) ) {
-        $id = $pieces->parameters[0];
+    if ( isset($pieces->extra) ) {
+        $id = $pieces->extra;
         unset($annotations[$id]);
     } else {
         $annotations = array();
