@@ -103,7 +103,6 @@ a:focus {
    ========================================================================== */
 #board {
   padding: 100px 30px 30px;
-  margin-top: 40px;
   overflow-y: visible;
 }
 
@@ -222,7 +221,7 @@ a:focus {
   background-color: #EF0005;
 }
 
-#add_new {
+#button_div {
   position: fixed;
   top: 20px;
   right: 20px;
