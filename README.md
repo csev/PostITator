@@ -1,0 +1,31 @@
+StickyGrader
+------------
+
+This is a simple JavaScript library that allows an annotation layer to be
+placed over top of some HTML page.
+
+The current example is rendering a PDF in the browser PDF.JS, with a custom
+sticky note library adapted from a CodePen from edmondko
+and a simple PHP based storage layer that uses PHP sessions.
+
+References
+----------
+
+PDF.JS
+
+https://mozilla.github.io/pdf.js/
+
+Multiple Pages with PDF.JS
+
+https://stackoverflow.com/questions/16480469/how-to-display-whole-pdf-not-only-one-page-with-pdf-js/19099203#19099203
+
+PDF.JS Tutorial From Useful Angle
+
+https://usefulangle.com/post/20/pdfjs-tutorial-1-preview-pdf-during-upload-wih-next-prev-buttons
+
+Simple Sticky Notes (from edmondko on CodePen)
+
+https://codepen.io/edmondko/pen/udcHG
+http://edmondko.github.io/circum/#/work
+
+`
