@@ -8,6 +8,16 @@ The current example is rendering a PDF in the browser PDF.JS, with a custom
 sticky note library adapted from a CodePen from edmondko
 and a simple PHP based storage layer that uses PHP sessions.
 
+You can see a demonstration of this in action at 
+
+https://www.stickygrader.com/
+
+If you would like to integrate this into your Learning Management System using 
+Learning Tools Interoperability® (LTI®),
+You can access a freely hosted version at
+
+https://www.tsugicloud.org/tsugi/store/details/stickygrader
+
 References
 ----------
 
