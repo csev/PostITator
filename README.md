@@ -38,4 +38,6 @@ Simple Sticky Notes (from edmondko on CodePen)
 https://codepen.io/edmondko/pen/udcHG
 http://edmondko.github.io/circum/#/work
 
-`
+----------
+
+Learning Tools Interoperability® (LTI®) is a trademark of the IMS Global Learning Consortium, Inc. (www.imsglobal.org)
